@@ -3,7 +3,7 @@
 }
 
 body {
-  margin: 20px;
+  margin: 45px;
   font-family: sans-serif;
   padding: 0;
   margin: auto;
@@ -12,8 +12,8 @@ body {
 .square {
   width: 100px;
   height: 100px;
-  border: 1px solid black;
-  font-size: 1.5rem;
+  border: 3px solid black;
+  font-size: 2rem;
   font-weight: bold;
   background-color: white;
   cursor: pointer;
@@ -29,5 +29,5 @@ body {
 div.status {
   font-size: larger;
   font-weight: bold;
-  margin: 2px;
+  margin: 10px;
 }

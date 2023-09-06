@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable react/prop-types */
+
 import { useState } from "react";
 
 function Square({ value, onSquareClick }) {
@@ -9,10 +11,7 @@ function Square({ value, onSquareClick }) {
   );
 }
 
-function Board() {
-  const [square, setSquare] = useState(Array(9).fill(null));
-  const [xIsNext, setxIsNext] = useState(true);
-
+function Board({ xIsNext, square, onPlay }) {
   const handleClick = (index) => {
     if (square[index] || calcWinner(square)) {
       return;
@@ -22,8 +21,7 @@ function Board() {
 
     newSquare[index] = xIsNext ? "X" : "O";
 
-    setSquare(newSquare);
-    setxIsNext(!xIsNext);
+    onPlay(newSquare);
   };
 
   const winner = calcWinner(square);
@@ -52,6 +50,44 @@ function Board() {
   );
 }
 
+const game = () => {
+  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0);
+  const xIsNext = currentMove % 2 === 0;
+  const currentSquare = history[currentMove];
+
+  const handlePlay = (squares) => {
+    const newHistory = [...history.slice(0, currentMove + 1), squares];
+
+    setHistory([...history, squares]);
+    setCurrentMove(newHistory.length - 1);
+  };
+
+  const jumpTo = (nextMove) => {
+    setCurrentMove(nextMove);
+  };
+
+  const moves = history.map((square, move) => {
+    let description = "";
+    if (move > 0) description = "go to move " + move;
+    else description = "restart game";
+    return (
+      <li key={move}>
+        <button onClick={() => jumpTo(move)}>{description}</button>
+      </li>
+    );
+  });
+
+  return (
+    <div className="game">
+      <div className="game-board">
+        <Board xIsNext={xIsNext} square={currentSquare} onPlay={handlePlay} />
+      </div>
+      <div className="game-info">{moves}</div>
+    </div>
+  );
+};
+
 const calcWinner = (square) => {
   const lines = [
     [0, 1, 2],
@@ -73,4 +109,4 @@ const calcWinner = (square) => {
   return false;
 };
 
-export default Board;
+export default game;
